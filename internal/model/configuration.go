@@ -3,7 +3,7 @@ package model
 import "time"
 
 type ClubConfiguration struct {
-	TableCount  int
+	DeskCount   int
 	Price       int
 	OpeningTime time.Time
 	ClosingTime time.Time
