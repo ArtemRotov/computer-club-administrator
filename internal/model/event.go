@@ -8,10 +8,6 @@ import (
 type EventId int
 
 const (
-	TimeLayout = "00:00"
-)
-
-const (
 	ClientHasCome EventId = iota + 1
 	ClientTookTheTable
 	ClientIsWaiting
@@ -31,8 +27,8 @@ type Event struct {
 
 func (e *Event) String() string {
 	if e.DeskId > 0 {
-		return fmt.Sprintf("%s %d %s %d", e.Time.Format(TimeLayout), e.Id, e.ClientName, e.DeskId)
+		return fmt.Sprintf("%s %d %s %d", e.Time.Format(time.TimeOnly)[:5], e.Id, e.ClientName, e.DeskId)
 	}
 
-	return fmt.Sprintf("%s %d %s", e.Time.Format(TimeLayout), e.Id, e.ClientName)
+	return fmt.Sprintf("%s %d %s", e.Time.Format(time.TimeOnly)[:5], e.Id, e.ClientName)
 }

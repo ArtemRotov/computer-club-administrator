@@ -9,13 +9,17 @@ import (
 
 func main() {
 	filename := os.Args[1]
-
 	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(fmt.Sprintf("cannot open input file '%s'", filename))
+	}
 	defer file.Close()
 
+	s, err := service.New(file)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("cannot open file '%s'", filename))
+		log.Fatal(err)
 	}
-
-	_, _ = service.New(file)
+	if err := s.Run(); err != nil {
+		log.Fatal("cannot work")
+	}
 }
