@@ -8,6 +8,9 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 2 {
+		log.Fatal("missing input argument")
+	}
 	filename := os.Args[1]
 	file, err := os.Open(filename)
 	if err != nil {

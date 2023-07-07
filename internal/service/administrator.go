@@ -15,6 +15,7 @@ type AdministratorService struct {
 	configuration  *model.ClubConfiguration
 	desk           map[int]model.Desk
 	incomingEvents []*model.Event
+	clients        map[string]*model.Client
 }
 
 // New - parses the file by filling in the configuration and the slice of events.
@@ -34,6 +35,7 @@ func New(file *os.File) (*AdministratorService, error) {
 		configuration:  &model.ClubConfiguration{},
 		desk:           map[int]model.Desk{},
 		incomingEvents: []*model.Event{},
+		clients:        map[string]*model.Client{},
 	}
 
 	// parse desk count
@@ -146,7 +148,54 @@ func (s *AdministratorService) newEvent(str string) (*model.Event, error) {
 
 func (s *AdministratorService) Run() error {
 	fmt.Println(s.configuration.OpeningTime.Format(time.TimeOnly)[:5])
+
+	for _, e := range s.incomingEvents {
+		fmt.Println(e)
+		switch e.Id {
+		case model.ClientHasCome:
+			_, ok := s.clients[e.ClientName]
+			if ok {
+				event := &model.Event{
+					Time:   e.Time,
+					Id:     model.EventError,
+					ErrMsg: "YouShallNotPass",
+				}
+				fmt.Println(event)
+			}
+			if e.Time.Compare(s.configuration.OpeningTime) < 0 {
+				event := &model.Event{
+					Time:   e.Time,
+					Id:     model.EventError,
+					ErrMsg: "NotOpenYet",
+				}
+				fmt.Println(event)
+			}
+		case model.ClientTookTheTable:
+			_, ok := s.clients[e.ClientName]
+			if !ok {
+				event := &model.Event{
+					Time:   e.Time,
+					Id:     model.EventError,
+					ErrMsg: "ClientUnknown",
+				}
+				fmt.Println(event)
+			}
+			if s.desk[e.DeskId].IsBusy {
+				event := &model.Event{
+					Time:   e.Time,
+					Id:     model.EventError,
+					ErrMsg: "PlaceIsBusy",
+				}
+				fmt.Println(event)
+			}
+		case model.ClientIsWaiting:
+		case model.ClientLeft:
+		}
+
+	}
+
 	fmt.Println(s.configuration.ClosingTime.Format(time.TimeOnly)[:5])
+
 	for i := 0; i < s.configuration.DeskCount; i++ {
 		fmt.Println(fmt.Sprintf("%d %d %s", i+1, s.revenue(i+1), s.rentDuration(i+1)))
 	}

@@ -1,5 +1,7 @@
 package model
 
 type Client struct {
-	Name string
+	Name          string
+	DeskId        int
+	IsAlreadyHere bool
 }

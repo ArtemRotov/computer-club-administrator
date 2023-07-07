@@ -23,12 +23,22 @@ type Event struct {
 	Id         EventId
 	ClientName string
 	DeskId     int
+	ErrMsg     string
 }
 
 func (e *Event) String() string {
-	if e.DeskId > 0 {
-		return fmt.Sprintf("%s %d %s %d", e.Time.Format(time.TimeOnly)[:5], e.Id, e.ClientName, e.DeskId)
+	var s string
+
+	s = fmt.Sprintf("%s %d", e.Time.Format(time.TimeOnly)[:5], e.Id)
+
+	if len(e.ClientName) > 0 {
+		s += fmt.Sprintf(" %s", e.ClientName)
+		if e.DeskId > 0 {
+			s += fmt.Sprintf(" %d", e.DeskId)
+		}
+	} else if len(e.ErrMsg) > 0 {
+		s += fmt.Sprintf(" %s", e.ErrMsg)
 	}
 
-	return fmt.Sprintf("%s %d %s", e.Time.Format(time.TimeOnly)[:5], e.Id, e.ClientName)
+	return s
 }
