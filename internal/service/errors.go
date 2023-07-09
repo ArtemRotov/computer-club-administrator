@@ -4,6 +4,6 @@ const (
 	eventErrorYouShallNotPass = "YouShallNotPass"
 	eventErrorNotOpenYet      = "NotOpenYet"
 	eventErrorPlaceIsBusy     = "PlaceIsBusy"
-	eventErrorClientUnknown   = " ClientUnknown"
+	eventErrorClientUnknown   = "ClientUnknown"
 	eventErrorCanWaitNoLonger = "ICanWaitNoLonger!"
 )

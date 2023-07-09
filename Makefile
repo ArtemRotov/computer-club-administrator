@@ -2,7 +2,7 @@
 
 .PHONY: run
 run:
-	go run ./cmd/app/main.go input.txt
+	go run ./cmd/app/main.go tests/test.txt
  
 .PHONY: build
 build:
@@ -14,10 +14,10 @@ test:
 
 .PHONY: build-docker
 build-docker:
-	docker build --rm -t computer-club-administrator-service . ; docker image prune -f
+	docker build --rm -t computer-club-manager . ; docker image prune -f
 
 .PHONY: run-docker
 run-docker:
-	docker run --rm -i computer-club-administrator-service /app/tests/test_base.txt
+	docker run --rm -i computer-club-manager /app/tests/test.txt
 
-#docker run --rm -i -v /home/user/github.com/computer-club-administrator/input.txt:/app/input.txt computer-club-administrator-service /app/input.txt
+#docker run --rm -i -v /home/user/github.com/computer-club-manager/input.txt:/app/input.txt computer-club-manager /app/input.txt

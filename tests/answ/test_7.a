@@ -1,0 +1,32 @@
+09:00
+08:00 1 artem1
+08:00 13 NotOpenYet
+08:55 1 bob
+08:55 13 NotOpenYet
+09:00 1 artem
+09:01 1 ivan
+09:02 2 ivan 1
+09:04 1 bob
+09:04 2 artem 1
+09:04 13 PlaceIsBusy
+09:04 3 artem
+09:04 13 ICanWaitNoLonger!
+09:05 2 artem 2
+09:06 3 bob
+11:44 1 bob
+11:44 13 YouShallNotPass
+12:00 2 anon 1
+12:00 13  ClientUnknown
+14:22 1 ann
+14:23 3 ann
+14:41 1 igor
+14:42 3 igor
+15:00 4 bob
+15:05 4 ivan
+15:05 12 ann 1
+17:00 11 ann
+17:00 11 artem
+17:00 11 igor
+17:00
+1 90 07:58
+2 80 07:55

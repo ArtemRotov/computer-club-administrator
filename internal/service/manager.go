@@ -91,15 +91,28 @@ events:
 				continue
 			}
 			id := s.clients[e.ClientName].DeskId
-			s.desks[id].Free(e.Time)
+			if id > 0 {
+				s.desks[id].Free(e.Time)
+			}
 			delete(s.clients, e.ClientName)
 
-			if len(s.queue) > 0 {
+			if len(s.queue) > 0 && id > 0 {
 				cl := s.queue[0]
 				s.desks[id].Take(e.Time)
 				cl.DeskId = id
 				s.queue = s.queue[1:]
 				fmt.Println(s.newEventWithDesk(e.Time, model.ClientTookTheTableAfterWaiting, id, cl.Name))
+			} else { // Ушел человек из очереди
+				fnd := -1
+				for i, v := range s.queue {
+					if e.ClientName == v.Name {
+						fnd = i
+						break
+					}
+				}
+				if fnd != -1 {
+					s.queue = append(s.queue[:fnd], s.queue[fnd+1:]...)
+				}
 			}
 		}
 	}
@@ -132,7 +145,9 @@ func (s *ManagerService) start() {
 func (s *ManagerService) stop() {
 	names := make([]string, 0)
 	for _, cl := range s.clients {
-		s.desks[cl.DeskId].Free(s.config.ClosingTime)
+		if cl.DeskId > 0 {
+			s.desks[cl.DeskId].Free(s.config.ClosingTime)
+		}
 		names = append(names, cl.Name)
 	}
 	sort.Strings(names)

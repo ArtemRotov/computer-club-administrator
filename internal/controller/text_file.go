@@ -80,12 +80,12 @@ func (h *TextFileHandler) Handle(file *os.File) error {
 // Returns an error if the input type is violated.
 func (h *TextFileHandler) parseDeskCount(input []string) (int, error) {
 	if len(input) <= h.currentRow {
-		return 0, newLineError(h.currentRow+1, nil)
+		return 0, newLineError(h.currentRow+1, "")
 	}
 
 	deskCount, err := strconv.Atoi(input[h.currentRow])
-	if err != nil {
-		return 0, newLineError(h.currentRow+1, err)
+	if err != nil || deskCount == 0 {
+		return 0, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 
 	h.currentRow = inputTimeInterval
@@ -96,28 +96,28 @@ func (h *TextFileHandler) parseDeskCount(input []string) (int, error) {
 // Returns an error if the input type is violated.
 func (h *TextFileHandler) parseTimes(input []string) (time.Time, time.Time, error) {
 	if len(input) <= h.currentRow {
-		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, nil)
+		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, "")
 	}
 
 	const Pattern = "^[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}$"
 	matched, err := regexp.MatchString(Pattern, input[h.currentRow])
 	if err != nil || !matched {
-		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, ErrCannotParseTimeValue)
+		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 
 	times := strings.Split(input[h.currentRow], " ")
 	// opening time
 	openingTime, err := time.Parse(time.TimeOnly, times[0]+":00")
 	if err != nil {
-		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, ErrCannotParseTimeValue)
+		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 	// closing time
 	closingTime, err := time.Parse(time.TimeOnly, times[1]+":00")
 	if err != nil {
-		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, ErrCannotParseTimeValue)
+		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 	if openingTime.Compare(closingTime) != -1 {
-		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, ErrCannotBadTimeInterval)
+		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 
 	h.currentRow = inputPrice
@@ -128,12 +128,12 @@ func (h *TextFileHandler) parseTimes(input []string) (time.Time, time.Time, erro
 // Returns an error if the input type is violated.
 func (h *TextFileHandler) parsePrice(input []string) (int, error) {
 	if len(input) <= h.currentRow {
-		return 0, newLineError(h.currentRow+1, nil)
+		return 0, newLineError(h.currentRow+1, "")
 	}
 
 	price, err := strconv.Atoi(input[h.currentRow])
 	if err != nil {
-		return 0, newLineError(h.currentRow+1, err)
+		return 0, newLineError(h.currentRow+1, input[h.currentRow])
 	}
 
 	h.currentRow = inputEvents
@@ -148,7 +148,7 @@ func (h *TextFileHandler) parseEvents(input []string) ([]*model.Event, error) {
 	for ; h.currentRow < len(input); h.currentRow++ {
 		ev, err := h.newEvent(input[h.currentRow])
 		if err != nil {
-			return nil, newLineError(h.currentRow+1, err)
+			return nil, newLineError(h.currentRow+1, input[h.currentRow])
 		}
 		events = append(events, ev)
 	}
