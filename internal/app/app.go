@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/ArtemRotov/computer-club-administrator/internal/controller"
-	"github.com/ArtemRotov/computer-club-administrator/internal/service"
+	"github.com/ArtemRotov/computer-club-manager/internal/controller"
+	"github.com/ArtemRotov/computer-club-manager/internal/service"
 	"os"
 )
 

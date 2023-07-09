@@ -2,7 +2,7 @@ package controller
 
 import (
 	"bufio"
-	"github.com/ArtemRotov/computer-club-administrator/internal/model"
+	"github.com/ArtemRotov/computer-club-manager/internal/model"
 	"os"
 	"regexp"
 	"strconv"
@@ -99,10 +99,13 @@ func (h *TextFileHandler) parseTimes(input []string) (time.Time, time.Time, erro
 		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, nil)
 	}
 
-	times := strings.Split(input[h.currentRow], " ")
-	if len(times) != 2 || len(times[0]) != 5 || len(times[1]) != 5 {
+	const Pattern = "^[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}$"
+	matched, err := regexp.MatchString(Pattern, input[h.currentRow])
+	if err != nil || !matched {
 		return time.Time{}, time.Time{}, newLineError(h.currentRow+1, ErrCannotParseTimeValue)
 	}
+
+	times := strings.Split(input[h.currentRow], " ")
 	// opening time
 	openingTime, err := time.Parse(time.TimeOnly, times[0]+":00")
 	if err != nil {

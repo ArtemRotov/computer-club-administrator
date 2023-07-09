@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ArtemRotov/computer-club-administrator/internal/app"
+	"github.com/ArtemRotov/computer-club-manager/internal/app"
 	"log"
 	"os"
 )
